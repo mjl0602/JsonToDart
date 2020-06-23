@@ -18,6 +18,7 @@ import 'package:json_to_dart/pages/json_text_field.dart';
 import 'package:json_to_dart/pages/json_tree.dart';
 import 'package:json_to_dart/pages/json_tree_header.dart';
 import 'package:json_to_dart/pages/setting.dart';
+import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -33,10 +34,6 @@ void main() {
   }
 
   ConfigHelper().initialize();
-
-  // SystemChannels.lifecycle.setMessageHandler((msg) {
-  //   print('SystemChannels> $msg');
-  // });
   runApp(new MyApp());
 }
 
@@ -45,6 +42,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     JsonToDartController controller = JsonToDartController();
     return OKToast(
+      radius: 4,
+      backgroundColor: ColorPlate.black.withOpacity(0.6),
       child: MultiProvider(
         providers: [
           Provider.value(
@@ -83,33 +82,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-
-//with WidgetsBindingObserver
-{
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addObserver(this);
-  // }
-
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   print(state);
-  //   if (state == AppLifecycleState.suspending) {
-  //     ConfigHelper().save();
-  //   }
-  // }
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPlate.white,
       body: Row(
         children: <Widget>[
           Expanded(
@@ -118,10 +95,10 @@ class _MyHomePageState extends State<MyHomePage>
               margin: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  Setting(),
                   Expanded(
                     child: JsonTextField(),
-                  )
+                  ),
+                  Setting(),
                 ],
               ),
             ),
@@ -131,13 +108,7 @@ class _MyHomePageState extends State<MyHomePage>
             onPointerUp: onPointerUp,
             onPointerMove: onPointerMove,
             behavior: HitTestBehavior.translucent,
-            child: Container(
-              width: 16.0,
-              color: Color(0x01000000),
-              alignment: Alignment.center,
-              height: double.infinity,
-              child: Text("||"),
-            ),
+            child: DragIcon(),
           ),
           Expanded(
             flex: ConfigHelper().config.column2Width,
@@ -190,5 +161,47 @@ class _MyHomePageState extends State<MyHomePage>
         updateGridSplitter(event.delta.dx);
       });
     }
+  }
+}
+
+// 提示你这里可以滑
+class DragIcon extends StatelessWidget {
+  const DragIcon({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 16.0,
+      alignment: Alignment.center,
+      height: double.infinity,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 14,
+            width: 2,
+            decoration: ShapeDecoration(
+              color: ColorPlate.gray.withOpacity(0.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ),
+          Container(width: 4),
+          Container(
+            height: 14,
+            width: 2,
+            decoration: ShapeDecoration(
+              color: ColorPlate.gray.withOpacity(0.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
